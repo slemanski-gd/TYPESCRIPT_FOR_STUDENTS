@@ -9,8 +9,8 @@ enum HttpMethod {
 }
 
 type HandlersType = {
-  next?: (request: RequestMockType) => any;
-  error?: (error: any) => any;
+  next?: (request: RequestMockType) => {status: HttpStatus};
+  error?: (error: Error) => {status: HttpStatus};
   complete?: () => void;
 };
 
@@ -37,7 +37,7 @@ class Observer {
   isUnsubscribed = false;
   _unsubscribe: Function;
 
-  constructor(handlers: HandlersType) {
+  constructor(handlers: HandlersType) { 
     this.handlers = handlers;
   }
 
@@ -123,11 +123,11 @@ const requestsMock: RequestMockType[] = [
   },
 ];
 
-const handleRequest = (request: {}) => {
+const handleRequest = (request: RequestMockType) : { status: HttpStatus } => {
   // handling of request
   return { status: HttpStatus.Ok };
 };
-const handleError = (error: {}) => {
+const handleError = (error: unknown) : {status: HttpStatus}  => {
   // handling of error
   return { status: HttpStatus.InternalServerError };
 };
